@@ -6,7 +6,6 @@ import {
   InboxOutlined,
   AppstoreOutlined,
   SwapOutlined,
-  FileTextOutlined,
 } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -44,14 +43,6 @@ const MENU_ITEMS: MenuItem[] = [
     icon: <SwapOutlined style={{ fontSize: 13 }} />,
     label: 'Stock Ledger',
   },
-  {
-    type: 'divider',
-  },
-  {
-    key: '/audit-logs',
-    icon: <FileTextOutlined style={{ fontSize: 13 }} />,
-    label: 'Audit Trail',
-  },
 ];
 
 export const AppSidebar: React.FC<AppSidebarProps> = ({
@@ -66,8 +57,12 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
 
   const selectedKeys = useMemo(() => {
     const pathname = location.pathname;
-    if (pathname === '/') return ['/'];
-    const matchedItem = MENU_ITEMS.find((item) => item?.key && pathname.startsWith(String(item.key)));
+    if (pathname === '/' || pathname === '') {
+      return ['/'];
+    }
+    const matchedItem = MENU_ITEMS.find(
+      (item) => item?.key && item.key !== '/' && pathname.startsWith(String(item.key))
+    );
     return matchedItem?.key ? [String(matchedItem.key)] : ['/'];
   }, [location.pathname]);
 

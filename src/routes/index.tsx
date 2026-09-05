@@ -28,10 +28,6 @@ export const router = createBrowserRouter([
         element: <TransactionsPage />,
       },
       {
-        path: PATHS.AUDIT_LOGS,
-        element: <TransactionsPage />,
-      },
-      {
         path: '*',
         element: <Navigate to={PATHS.DASHBOARD} replace />,
       },
