@@ -22,7 +22,7 @@ export interface ProductTableProps {
   loading?: boolean;
   onEdit: (product: Product) => void;
   onDelete: (id: string) => void;
-  onAdjustStock: (id: string, delta: number, reason: string) => Promise<void>;
+  onAdjustStock: (id: string, delta: number, reason: string) => Promise<unknown>;
 }
 
 export const ProductTable: React.FC<ProductTableProps> = ({
