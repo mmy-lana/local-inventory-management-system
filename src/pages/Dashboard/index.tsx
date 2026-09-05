@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Card, Table, Typography } from 'antd';
+import { Row, Col, Card, Table } from 'antd';
 import type { TableColumnsType } from 'antd';
 import { DashboardLayoutTemplate } from '../../components/templates/DashboardLayoutTemplate';
 import { MetricStatCard } from '../../components/molecules/MetricStatCard';
@@ -12,8 +12,6 @@ import { useCategories } from '../../features/categories/hooks/useCategories';
 import type { Product } from '../../features/inventory/types';
 import type { StockTransaction } from '../../features/transactions/types';
 import { formatDateTime } from '../../utils/formatters';
-
-const { Text } = Typography;
 
 export const DashboardPage: React.FC = () => {
   const { allProducts, metrics } = useInventory();
@@ -31,28 +29,29 @@ export const DashboardPage: React.FC = () => {
       title: 'SKU',
       dataIndex: 'sku',
       key: 'sku',
-      width: 120,
+      width: 130,
       render: (sku: string) => <DenseCell value={sku} monospace bold />,
     },
     {
       title: 'Product Title',
       dataIndex: 'name',
       key: 'name',
-      render: (name: string, r) => <DenseCell value={name} secondaryValue={r.categoryName} />,
+      width: 220,
+      render: (name: string, r) => <DenseCell value={name} secondaryValue={r.categoryName} maxWidth={210} />,
     },
     {
       title: 'On-Hand',
       dataIndex: 'currentStock',
       key: 'currentStock',
-      width: 80,
+      width: 85,
       align: 'right',
       render: (qty: number) => <strong>{qty.toLocaleString()}</strong>,
     },
     {
-      title: 'Reorder Level',
+      title: 'Reorder',
       dataIndex: 'reorderLevel',
       key: 'reorderLevel',
-      width: 90,
+      width: 80,
       align: 'right',
       render: (reorder: number) => <span style={{ color: '#8c8c8c' }}>{reorder.toLocaleString()}</span>,
     },
@@ -60,7 +59,7 @@ export const DashboardPage: React.FC = () => {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      width: 100,
+      width: 115,
       render: (status: string) => <StatusBadge status={status} />,
     },
   ];
@@ -70,34 +69,42 @@ export const DashboardPage: React.FC = () => {
       title: 'Timestamp',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      width: 130,
+      width: 145,
       render: (d: string) => (
-        <span style={{ fontSize: 11, fontFamily: 'monospace' }}>{formatDateTime(d)}</span>
+        <span style={{ fontSize: 11, fontFamily: 'monospace', whiteSpace: 'nowrap' }}>
+          {formatDateTime(d)}
+        </span>
       ),
     },
     {
       title: 'Type',
       dataIndex: 'type',
       key: 'type',
-      width: 85,
-      render: (type: string) => (
-        <Text style={{ fontSize: 11, fontWeight: 600 }}>{type}</Text>
-      ),
+      width: 105,
+      render: (type: string) => {
+        const color = type === 'INBOUND' ? '#389e0d' : type === 'OUTBOUND' ? '#cf1322' : '#0958d9';
+        return (
+          <span style={{ fontSize: 11, fontWeight: 600, color, whiteSpace: 'nowrap' }}>
+            {type}
+          </span>
+        );
+      },
     },
     {
       title: 'Item',
       dataIndex: 'sku',
       key: 'sku',
-      render: (sku: string, r) => <DenseCell value={sku} secondaryValue={r.productName} monospace />,
+      width: 180,
+      render: (sku: string, r) => <DenseCell value={sku} secondaryValue={r.productName} monospace maxWidth={170} />,
     },
     {
       title: 'Qty',
       dataIndex: 'quantityChange',
       key: 'quantityChange',
-      width: 80,
+      width: 75,
       align: 'right',
       render: (q: number) => (
-        <span style={{ fontWeight: 600, color: q > 0 ? '#389e0d' : '#cf1322' }}>
+        <span style={{ fontWeight: 600, color: q > 0 ? '#389e0d' : '#cf1322', fontVariantNumeric: 'tabular-nums' }}>
           {q > 0 ? `+${q}` : q}
         </span>
       ),
@@ -106,7 +113,7 @@ export const DashboardPage: React.FC = () => {
       title: 'Value',
       dataIndex: 'totalValue',
       key: 'totalValue',
-      width: 90,
+      width: 95,
       align: 'right',
       render: (val: number, r) => (
         <MoneyText amount={r.type === 'OUTBOUND' ? -val : val} size="small" highlightSign />
@@ -173,6 +180,7 @@ export const DashboardPage: React.FC = () => {
               dataSource={criticalItems}
               rowKey="id"
               size="small"
+              scroll={{ x: 550 }}
               pagination={false}
               locale={{ emptyText: 'No critical inventory shortages detected' }}
             />
@@ -190,6 +198,7 @@ export const DashboardPage: React.FC = () => {
               dataSource={recentTransactions}
               rowKey="id"
               size="small"
+              scroll={{ x: 580 }}
               pagination={false}
               locale={{ emptyText: 'No transaction entries on record' }}
             />

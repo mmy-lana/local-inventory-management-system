@@ -5,6 +5,7 @@ import {
   DatabaseOutlined,
   CloudSyncOutlined,
   SettingOutlined,
+  MenuOutlined,
 } from '@ant-design/icons';
 
 const { Text, Title } = Typography;
@@ -14,6 +15,8 @@ export interface AppHeaderProps {
   activeEnvironment?: string;
   lowStockAlertCount?: number;
   lastSyncTime?: string;
+  isMobile?: boolean;
+  onToggleMobileNav?: () => void;
   onTriggerManualSync?: () => void;
   onOpenSettings?: () => void;
   className?: string;
@@ -23,7 +26,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   systemTitle = 'Local Inventory Engine',
   activeEnvironment = 'Local IndexedDB',
   lowStockAlertCount = 0,
-  lastSyncTime = 'Just now',
+  lastSyncTime = 'Active',
+  isMobile = false,
+  onToggleMobileNav,
   onTriggerManualSync,
   onOpenSettings,
   className = '',
@@ -38,20 +43,30 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '0 16px',
+        padding: '0 12px',
         position: 'sticky',
         top: 0,
         zIndex: 99,
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        {isMobile && (
+          <Button
+            type="text"
+            size="small"
+            icon={<MenuOutlined style={{ fontSize: 14 }} />}
+            onClick={onToggleMobileNav}
+            aria-label="Toggle navigation"
+            style={{ width: 28, height: 28, padding: 0 }}
+          />
+        )}
         <DatabaseOutlined style={{ fontSize: 16, color: '#0958d9' }} />
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
           <Title
             level={5}
             style={{
               margin: 0,
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: 600,
               letterSpacing: '-0.02em',
               color: '#141414',
@@ -59,38 +74,42 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           >
             {systemTitle}
           </Title>
-          <span
-            style={{
-              fontSize: 10,
-              padding: '1px 6px',
-              backgroundColor: '#f5f5f5',
-              border: '1px solid #d9d9d9',
-              borderRadius: 2,
-              color: '#595959',
-              fontFamily: 'monospace',
-              fontWeight: 500,
-            }}
-          >
-            {activeEnvironment}
-          </span>
+          {!isMobile && (
+            <span
+              style={{
+                fontSize: 10,
+                padding: '1px 6px',
+                backgroundColor: '#f5f5f5',
+                border: '1px solid #d9d9d9',
+                borderRadius: 2,
+                color: '#595959',
+                fontFamily: 'monospace',
+                fontWeight: 500,
+              }}
+            >
+              {activeEnvironment}
+            </span>
+          )}
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            fontSize: 11,
-            color: '#8c8c8c',
-          }}
-        >
-          <span>Last Indexed:</span>
-          <Text code style={{ fontSize: 11, margin: 0, padding: '0 4px' }}>
-            {lastSyncTime}
-          </Text>
-        </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        {!isMobile && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 4,
+              fontSize: 11,
+              color: '#8c8c8c',
+            }}
+          >
+            <span>Last Indexed:</span>
+            <Text code style={{ fontSize: 11, margin: 0, padding: '1px 5px' }}>
+              {lastSyncTime}
+            </Text>
+          </div>
+        )}
 
         {onTriggerManualSync && (
           <Tooltip title="Synchronize local database" mouseEnterDelay={0.3}>

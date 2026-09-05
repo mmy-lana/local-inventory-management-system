@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { AppLayout } from '../layouts/AppLayout';
 import { DashboardPage } from '../pages/Dashboard';
 import { InventoryPage } from '../pages/Inventory';
@@ -26,6 +26,14 @@ export const router = createBrowserRouter([
       {
         path: PATHS.TRANSACTIONS,
         element: <TransactionsPage />,
+      },
+      {
+        path: PATHS.AUDIT_LOGS,
+        element: <TransactionsPage />,
+      },
+      {
+        path: '*',
+        element: <Navigate to={PATHS.DASHBOARD} replace />,
       },
     ],
   },
